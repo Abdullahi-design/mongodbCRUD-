@@ -1,0 +1,7 @@
+
+🍁 To run any file, just type node then the file name 🌿
+
+🍁 For example 🌿
+
+######
+node createOne
