@@ -1,11 +1,9 @@
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
 async function main() {
-    /**
-     * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
-     * See https://docs.mongodb.com/drivers/node/ for more details
-     */
-    const uri = "mongodb+srv://firstdb:firstdb123@cluster0.w0ilmmx.mongodb.net/companyDB";
+
+    const uri = process.env.MONGODB_URL;
 
     /**
      * The Mongo Client you will use to interact with your database
@@ -43,27 +41,14 @@ async function main() {
 
 main().catch(console.error);
 
-
-/**
- * Delete all listings that were last scraped prior to the given date
- * @param {MongoClient} client A MongoClient that is connected to a cluster with the sample_airbnb database
- * @param {Date} date The date to check the last_scraped property against
- */
 async function deleteListingsScrapedBeforeDate(client, date) {
-    // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#deleteMany for the deleteMany() docs
+
     const result = await client.db("sample_airbnb").collection("listingsAndReviews").deleteMany({ "last_scraped": { $lt: date } });
     console.log(`${result.deletedCount} document(s) was/were deleted.`);
 }
 
-/**
- * Print information indicating if a listing with the given name exists. 
- * If a listing has the 'last_scraped' field, print that as well.
- * Note: If more than one listing has the same name, only the first listing the database finds will be printed..
- * @param {MongoClient} client A MongoClient that is connected to a cluster with the sample_airbnb database
- * @param {String} nameOfListing The name of the listing you want to find
- */
 async function printIfListingExists(client, nameOfListing) {
-    // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#findOne for the findOne() docs
+    
     const result = await client.db("sample_airbnb").collection("listingsAndReviews").findOne({ name: nameOfListing });
 
     if (result) {
